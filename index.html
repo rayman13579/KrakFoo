@@ -1,0 +1,56 @@
+<html>
+<header>
+  <title>NZXT Starfield Compass Web Integration</title>
+  <link rel="stylesheet" href="./public/css/style.css" />
+</header>
+
+<body>
+  <div class="background" style="position: absolute; width: 640px; height: 640px;">
+    <svg id="svg" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
+      <circle id="progress" cx="320" cy="320" fill="none" r="312" stroke-width="16" stroke="red"
+        stroke-dasharray="1961 1961" stroke-linecap="round"></circle>
+    </svg>
+  </div>
+
+  <div class="info_wrapper">
+    <div class="info_container" style="margin-left: 85px">
+      <p id="cpu_temp" class="info">0°C</p>
+      <p class="title">CPU</p>
+    </div>
+
+    <span class="divider"></span>
+
+    <div class="info_container" style="margin-right: 85px">
+      <p id="cpu_load" class="info">0%</p>
+      <p class="title">LOAD</p>
+    </div>
+  </div>
+
+  <div class="custom_text_container">
+    <p id="title" class="title"></p>
+    <p id="artist" class="subtitle"></p>
+    <p>
+      <a id="current" class="subtitle"></a>
+      <a class="subtitle"> / </a>
+      <a id="length" class="subtitle"></a>
+    </p>
+  </div>
+
+  <div class="info_wrapper">
+    <div class="info_container" style="margin-left: 85px">
+      <p id="gpu_temp" class="info">0°C</p>
+      <p class="title">GPU</p>
+    </div>
+
+    <span class="divider"></span>
+
+    <div class="info_container" style="margin-right: 85px">
+      <p id="gpu_load" class="info">0%</p>
+      <p class="title">LOAD</p>
+    </div>
+  </div>
+
+</body>
+<script type="module" src="./public/js/main.js"></script>
+
+</html>

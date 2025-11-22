@@ -1,0 +1,18 @@
+{
+  "name": "krakfoo",
+  "version": "1.0.0",
+  "description": "NZXT Kraken Foobar2000 web integration",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Rayman",
+  "license": "ISC",
+  "packageManager": "pnpm@10.18.3",
+  "dependencies": {
+    "@nzxt/web-integrations-types": "0.4.1",
+    "express": "5.1.0"
+  }
+}

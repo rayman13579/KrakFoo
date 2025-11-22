@@ -1,0 +1,1 @@
+NZXT Kraken Foobar2000 web integration using [beefweb](https://github.com/hyperblast/beefweb)
