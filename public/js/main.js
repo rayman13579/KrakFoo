@@ -24,19 +24,28 @@ const update_gpu = gpu => {
   document.getElementById('gpu_load').innerHTML = `${(load < 10 ? '0' + load : load)}%`;
 }
 
-const eventSource = new EventSource('http://10.0.0.15:8880/api/query/updates?player=true&trcolumns=%artist%,%title%');
+const voicemeeterEvents = new EventSource('http://10.0.0.15:8881/mute-events');
 
-eventSource.onmessage = event => {
+voicemeeterEvents.onmessage = event => {
+  console.log(event);
+  if (event) {
+    document.getElementById('muted').innerHTML = event.data === 'true' ? 'MUTED' : 'NOT MUTED';
+  }
+}
+
+const foobarEvents = new EventSource('http://localhost:8880/foobar2000');
+
+foobarEvents.onmessage = event => {
   const data = JSON.parse(event.data);
 
   if (data && data.player) {
-    document.getElementById('title').innerHTML = data.player.activeItem.columns[1].toUpperCase();
-    document.getElementById('artist').innerHTML = data.player.activeItem.columns[0].toUpperCase();
+    document.getElementById('title').innerHTML = data.player.activeItem.artist.toUpperCase();
+    document.getElementById('artist').innerHTML = data.player.activeItem.title.toUpperCase();
     const current = parseSeconds(data.player.activeItem.position);
     const length = parseSeconds(data.player.activeItem.duration);
     document.getElementById('length').innerHTML = prettyPrintTime(length);
     const state = data.player.playbackState;
-    console.log(state);
+    document.getElementById('playing').innerHTML = state.toUpperCase();
     if (state === 'playing') {
       startTimer(current, length);
     } else {
