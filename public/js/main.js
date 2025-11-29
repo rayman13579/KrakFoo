@@ -24,15 +24,6 @@ const update_gpu = gpu => {
   document.getElementById('gpu_load').innerHTML = `${(load < 10 ? '0' + load : load)}%`;
 }
 
-const voicemeeterEvents = new EventSource('http://10.0.0.15:8881/mute-events');
-
-voicemeeterEvents.onmessage = event => {
-  console.log(event);
-  if (event) {
-    document.getElementById('muted').innerHTML = event.data === 'true' ? 'MUTED' : 'NOT MUTED';
-  }
-}
-
 const foobarEvents = new EventSource('http://localhost:8880/foobar2000');
 
 foobarEvents.onmessage = event => {
@@ -46,6 +37,8 @@ foobarEvents.onmessage = event => {
     document.getElementById('length').innerHTML = prettyPrintTime(length);
     const state = data.player.playbackState;
     document.getElementById('playing').innerHTML = state.toUpperCase();
+    document.getElementById('muted').innerHTML = data.muted ? 'MUTED' : 'NOT MUTED';
+
     if (state === 'playing') {
       startTimer(current, length);
     } else {
