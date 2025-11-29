@@ -1,1 +1,1 @@
-NZXT Kraken Foobar2000 web integration using [beefweb](https://github.com/hyperblast/beefweb)
+NZXT Kraken Foobar2000 and Voicemeeter web integration using modified [beefweb](https://github.com/rayman13579/beefweb)
