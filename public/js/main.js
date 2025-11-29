@@ -29,25 +29,28 @@ const foobarEvents = new EventSource('http://localhost:8880/foobar2000');
 foobarEvents.onmessage = event => {
   const data = JSON.parse(event.data);
 
-  if (data && data.player) {
-    document.getElementById('title').innerHTML = data.player.activeItem.artist.toUpperCase();
-    document.getElementById('artist').innerHTML = data.player.activeItem.title.toUpperCase();
-    const current = parseSeconds(data.player.activeItem.position);
-    const length = parseSeconds(data.player.activeItem.duration);
-    document.getElementById('length').innerHTML = prettyPrintTime(length);
-    const state = data.player.playbackState;
-    document.getElementById('playing').innerHTML = state.toUpperCase();
-    document.getElementById('muted').innerHTML = data.muted ? 'MUTED' : 'NOT MUTED';
+  if (!data || !data.player) return;
 
-    if (state === 'playing') {
-      startTimer(current, length);
-    } else {
-      document.getElementById('current').innerHTML = prettyPrintTime(current);
-      document.getElementById('progress').style.strokeDasharray = `${circumference * (current.raw / length.raw)} ${circumference}`;
-      document.getElementById('progress').style.stroke = 'white';
-      animation?.cancel();
-      stopTimer();
-    }
+  const activeItem = data.player.activeItem;
+  document.getElementById('title').innerHTML = activeItem.artist.toUpperCase();
+  document.getElementById('artist').innerHTML = activeItem.title.toUpperCase();
+
+  const current = parseSeconds(activeItem.position);
+  const length = parseSeconds(activeItem.duration);
+  const state = data.player.playbackState;
+
+  document.getElementById('length').innerHTML = prettyPrintTime(length);
+  if (state === 'playing') {
+    document.getElementById('current').innerHTML = prettyPrintTime(current);
+    calculateProgress(length.raw, current.raw);
+  } else {
+    document.getElementById('current').innerHTML = prettyPrintTime(current);
+    document.getElementById('progress').style.strokeDasharray = `${circumference * (current.raw / length.raw)} ${circumference}`;
+  }
+  if (data.muted) {
+    document.getElementById('progress').style.stroke = 'white';
+  } else {
+    document.getElementById('progress').style.stroke = 'red';
   }
 };
 
@@ -57,53 +60,12 @@ const parseSeconds = (seconds) => {
   return { min: min, sec: sec, raw: seconds };
 }
 
-let timer;
-let currentRaw = 0;
-let progress = 0;
-let oldProgress = 0;
-let animation;
-
-const stopTimer = () => {
-  clearInterval(timer);
-  timer = null;
-  currentRaw = 0;
-}
-
-const startTimer = (current, length) => {
-  stopTimer();
-  document.getElementById('progress').style.stroke = 'red';
-  document.getElementById('progress').style.animationPlayState = 'running';
-  currentRaw = current.raw;
-  timer = setInterval(() => {
-    currentRaw += 1;
-    current.sec += 1;
-    if (current.sec >= 60) {
-      current.min += 1;
-      current.sec = 0;
-    }
-    document.getElementById('current').innerHTML = prettyPrintTime(current);
-    calculateProgress(length);
-  }, 1000);
-}
-
 const circumference = 1961;
 
-const calculateProgress = (length) => {
-  oldProgress = progress;
-  progress = circumference * (currentRaw / length.raw);
-  animation?.cancel();
-  animation = document.getElementById('progress').animate(
-    [
-      { strokeDasharray: `${oldProgress} ${circumference}` },
-      { strokeDasharray: `${progress} ${circumference}` }
-    ],
-    {
-      duration: 1000,
-      iterations: Infinity,
-      easing: 'linear',
-    }
-  );
-}
+const calculateProgress = (length, current) => {
+  const progress = circumference * (current / length);
+  document.getElementById('progress').style.strokeDasharray = `${progress} ${circumference}`;
+};
 
 const prettyPrintTime = (time) => {
   return (time.min < 10 ? '0' + time.min : time.min) + ':' + (time.sec < 10 ? '0' + time.sec : time.sec);

@@ -140,3 +140,7 @@ body {
   border: 2px solid var(--primary-color);
   opacity: 50%;
 }
+
+#progress {
+  transition: stroke-dasharray 0.25s linear, stroke 0.25s linear;
+}
