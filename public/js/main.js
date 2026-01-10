@@ -24,7 +24,7 @@ const update_gpu = gpu => {
   document.getElementById('gpu_load').innerHTML = `${(load < 10 ? '0' + load : load)}%`;
 }
 
-const foobarEvents = new EventSource('http://localhost:8880/foobar2000');
+const foobarEvents = new EventSource('http://10.0.0.15:8880/foobar2000');
 
 foobarEvents.onmessage = event => {
   const data = JSON.parse(event.data);
@@ -32,8 +32,8 @@ foobarEvents.onmessage = event => {
   if (!data || !data.player) return;
 
   const activeItem = data.player.activeItem;
-  document.getElementById('title').innerHTML = activeItem.artist.toUpperCase();
-  document.getElementById('artist').innerHTML = activeItem.title.toUpperCase();
+  document.getElementById('title').innerHTML = activeItem.title.toUpperCase();
+  document.getElementById('artist').innerHTML = activeItem.artist.toUpperCase();
 
   const current = parseSeconds(activeItem.position);
   const length = parseSeconds(activeItem.duration);
